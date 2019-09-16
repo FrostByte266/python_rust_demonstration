@@ -1,0 +1,2 @@
+xhost +
+docker run -e DISPLAY --net=host --rm -it -e USER -v $PWD/src:/src -v $PWD/test:/test python-rust bash -i
