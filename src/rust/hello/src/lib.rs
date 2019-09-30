@@ -1,4 +1,3 @@
-#![deny(rust_2018_idioms)]
 use ndarray::{ArrayViewD};
 use numpy::{PyArrayDyn};
 use pyo3::prelude::{pymodule, PyModule, PyResult, Python};
@@ -13,18 +12,41 @@ fn rustic(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
 
         Ok(((c1b1.atan2(c0b0) - a1b1.atan2(a0b0)).to_degrees()).abs())
     }
+    fn find_distance(a: ArrayViewD<'_, f64>, b: ArrayViewD<'_, f64>) -> PyResult<f64> {
+        let y_diff = b[1] - a[1];
+        let x_diff = b[0] - a[0];
+
+        let y_diff_squared = y_diff.powi(2);
+        let x_diff_squared = x_diff.powi(2);
+
+        let sum_square_diff = y_diff_squared + x_diff_squared;
+
+        Ok(sum_square_diff.sqrt())
+    }
+
 
     #[pyfn(m, "get_angle")]
     fn get_angle_py(
         _py: Python<'_>,
         a: &PyArrayDyn<f64>,
         b: &PyArrayDyn<f64>,
-        c: &PyArrayDyn<f64>,
+        c: &PyArrayDyn<f64>
     ) -> PyResult<f64> {
         let a = a.as_array();
         let b = b.as_array();
         let c = c.as_array();
         get_angle(a, b, c)
+    }
+
+    #[pyfn(m, "find_distance")]
+    fn find_distance_py(
+        _py: Python<'_>,
+        a: &PyArrayDyn<f64>,
+        b: &PyArrayDyn<f64>
+    ) -> PyResult<f64> {
+        let a = a.as_array();
+        let b = b.as_array();
+        find_distance(a, b)
     }
 
 

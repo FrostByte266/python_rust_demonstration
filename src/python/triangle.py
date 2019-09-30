@@ -2,14 +2,16 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 import numpy as np 
 import math
-from rust_ext import get_angle
+import rustic
 
 x = np.array([
     [1, 1],
     [2, 2.5],
     [3, 1]
 ])
- 
+
+def is_congruent(base: plt.Polygon, compare: plt.Polygon, return_match_mode=False) -> tuple:
+    pass
 
 def get_triangle_angles(triangle: plt.Polygon) -> tuple:
     points = triangle.get_xy()
@@ -17,9 +19,9 @@ def get_triangle_angles(triangle: plt.Polygon) -> tuple:
     b = points[1]
     c = points[2]
 
-    abc = get_angle(a, b, c)
-    bac = get_angle(b, a, c)
-    bca = get_angle(b, c, a)
+    abc = rustic.get_angle(a, b, c)
+    bac = rustic.get_angle(b, a, c)
+    bca = rustic.get_angle(b, c, a)
 
     return abc, bac, bca
 
