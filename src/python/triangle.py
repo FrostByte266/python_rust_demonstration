@@ -15,9 +15,10 @@ def is_congruent(base: plt.Polygon, compare: plt.Polygon, return_match_mode=Fals
 
 def get_triangle_angles(triangle: plt.Polygon) -> tuple:
     points = triangle.get_xy()
-    a = points[0]
-    b = points[1]
-    c = points[2]
+    a, b, c = points[:-1]
+    print(a)
+    print(b)
+    print(c)
 
     abc = rustic.get_angle(a, b, c)
     bac = rustic.get_angle(b, a, c)

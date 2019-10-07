@@ -1,4 +1,4 @@
-use ndarray::{ArrayViewD};
+use ndarray::{ArrayViewD, ArrayViewMutD};
 use numpy::{PyArrayDyn};
 use pyo3::prelude::{pymodule, PyModule, PyResult, Python};
 
@@ -24,6 +24,12 @@ fn rustic(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         Ok(sum_square_diff.sqrt())
     }
 
+    fn gen_circle_points(r: f64, mut x: ArrayViewMutD<'_, f64>, mut y: ArrayViewMutD<'_, f64>) {
+        for i in 0..x.len() {
+            x[i] = r * f64::cos(x[i]);
+            y[i] = r * f64::sin(y[i]);
+        }
+    }
 
     #[pyfn(m, "get_angle")]
     fn get_angle_py(
@@ -49,6 +55,18 @@ fn rustic(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         find_distance(a, b)
     }
 
+    #[pyfn(m, "gen_circle_points")]
+    fn gen_circle_points_py(
+        _py: Python<'_>,
+        r: f64,
+        x: &PyArrayDyn<f64>,
+        y: &PyArrayDyn<f64>
+    ) -> PyResult<()> {
+        let x = x.as_array_mut();
+        let y = y.as_array_mut();
+        gen_circle_points(r, x, y);
+        Ok(())
+    }
 
     Ok(())
 }

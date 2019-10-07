@@ -13,6 +13,8 @@ crate-type = ["dylib"]
 [dependencies]
 numpy = "*"
 ndarray = "*"
+itertools = "*"
+itertools-num = "*"
 
 
 [dependencies.pyo3]
