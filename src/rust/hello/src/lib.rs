@@ -26,8 +26,6 @@ fn rustic(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
 
     fn gen_circle_points(r: f64, mut x: ArrayViewMutD<'_, f64>, mut y: ArrayViewMutD<'_, f64>) {
         for i in 0..x.len() {
-            // x[i] = r * f64::cos(x[i]);
-            // y[i] = r * f64::sin(y[i]);
             x[i] = r * x[i].cos();
             y[i] = r * y[i].sin();
         }
