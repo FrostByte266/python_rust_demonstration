@@ -24,10 +24,17 @@ fn rustic(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         Ok(sum_square_diff.sqrt())
     }
 
-    fn gen_circle_points(r: f64, mut x: ArrayViewMutD<'_, f64>, mut y: ArrayViewMutD<'_, f64>) {
+    fn linspace_to_circle_points(r: f64, mut x: ArrayViewMutD<'_, f64>, mut y: ArrayViewMutD<'_, f64>) {
         for i in 0..x.len() {
             x[i] = r * x[i].cos();
             y[i] = r * y[i].sin();
+        }
+    }
+
+    fn linspace_to_circle_points_with_offset(r: f64, mut x: ArrayViewMutD<'_, f64>, mut y: ArrayViewMutD<'_, f64>, offset_x: i32, offset_y: i32) {
+        for i in 0..x.len() {
+            x[i] = r * x[i].cos() + offset_x as f64;
+            y[i] = r * y[i].sin() + offset_y as f64;
         }
     }
 
@@ -55,16 +62,31 @@ fn rustic(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         find_distance(a, b)
     }
 
-    #[pyfn(m, "gen_circle_points")]
-    fn gen_circle_points_py(
+    #[pyfn(m, "linspace_to_circle_points")]
+    fn linspace_to_circle_points_py(
         _py: Python<'_>,
         r: f64,
         x: &PyArrayDyn<f64>,
-        y: &PyArrayDyn<f64>
+        y: &PyArrayDyn<f64>,
     ) -> PyResult<()> {
         let x = x.as_array_mut();
         let y = y.as_array_mut();
-        gen_circle_points(r, x, y);
+        linspace_to_circle_points(r, x, y);
+        Ok(())
+    }
+
+    #[pyfn(m, "linspace_to_circle_points_with_offset")]
+    fn linspace_to_circle_points_with_offset_py(
+        _py: Python<'_>,
+        r: f64,
+        x: &PyArrayDyn<f64>,
+        y: &PyArrayDyn<f64>,
+        offset_x: i32,
+        offset_y: i32
+    ) -> PyResult<()> {
+        let x = x.as_array_mut();
+        let y = y.as_array_mut();
+        linspace_to_circle_points_with_offset(r, x, y, offset_x, offset_y);
         Ok(())
     }
 

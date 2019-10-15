@@ -12,6 +12,6 @@ r = 1
 x = t.copy()
 y = t.copy()
 
-rustic.gen_circle_points(r, x, y)
+rustic.linspace_to_circle_points(r, x, y)
 plt.plot(x, y)
 plt.show()
