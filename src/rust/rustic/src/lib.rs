@@ -31,10 +31,10 @@ fn rustic(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         }
     }
 
-    fn linspace_to_circle_points_with_offset(r: f64, mut x: ArrayViewMutD<'_, f64>, mut y: ArrayViewMutD<'_, f64>, offset_x: i32, offset_y: i32) {
+    fn linspace_to_circle_points_with_offset(r: f64, mut x: ArrayViewMutD<'_, f64>, mut y: ArrayViewMutD<'_, f64>, offset_x: f64, offset_y: f64) {
         for i in 0..x.len() {
-            x[i] = r * x[i].cos() + offset_x as f64;
-            y[i] = r * y[i].sin() + offset_y as f64;
+            x[i] = r * x[i].cos() + offset_x;
+            y[i] = r * y[i].sin() + offset_y;
         }
     }
 
@@ -81,8 +81,8 @@ fn rustic(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         r: f64,
         x: &PyArrayDyn<f64>,
         y: &PyArrayDyn<f64>,
-        offset_x: i32,
-        offset_y: i32
+        offset_x: f64,
+        offset_y: f64
     ) -> PyResult<()> {
         let x = x.as_array_mut();
         let y = y.as_array_mut();
