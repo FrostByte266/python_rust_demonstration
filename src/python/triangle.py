@@ -24,8 +24,7 @@ def get_triangle_angles(triangle: plt.Polygon) -> tuple:
     return abc, bac, bca
 
 
-
-plt.figure()
+ax = plt.gca()
 plt.scatter(x[:, 0], x[:, 1])
 t1 = plt.Polygon(x)
 coords = t1.get_xy()[:-1]
@@ -35,5 +34,5 @@ print(f'{ang} ABC: {abc:.2f}\n'
 f'{ang} BAC: {bac:.2f}\n'
 f'{ang} BCA: {bca:.2f}\n'
 )
-plt.gca().add_patch(t1)
+ax.add_patch(t1)
 plt.show()
