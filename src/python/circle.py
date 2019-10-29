@@ -42,16 +42,12 @@ while True:
     elements = ['x', 'y']
     list(map(lambda i: window[i].Update(disabled=not checked), elements))
     if event == 'Plot':
-        t = np.linspace(0, np.pi*2)
         r = float(window['r'].Get())
-
-        x = t.copy()
-        y = t.copy()
 
         x_off = float(window['x'].Get()) if checked else 0
         y_off = float(window['y'].Get()) if checked else 0
 
-        rustic.linspace_to_circle_points_with_offset(r, x, y, x_off, y_off)
+        x, y = rustic.circle_points_offset(r, x_off, y_off)
         plt.plot(x, y)
         plt.text(
             x_off,
