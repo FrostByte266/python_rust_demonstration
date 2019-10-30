@@ -1,18 +1,47 @@
 use ndarray::{ArrayViewD, Array, Array1, Array2, arr2};
-use numpy::{PyArrayDyn, IntoPyArray, PyArray2};
-use pyo3::prelude::{pymodule, PyModule, PyResult, Python, Py};
+use numpy::{PyArrayDyn, IntoPyArray};
+use pyo3::prelude::{pymodule, PyModule, PyResult, Python};
 use pyo3::types::{PyTuple};
-use core::f64::consts::{PI};
+use core::f64::consts::PI;
 
 #[pymodule]
 fn rustic(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
-    fn make_triangle() -> Array2<i32> {
-        Array2::zeros((3, 3))
+    fn make_triangle(x_origin: f64, y_origin: f64, w: f64, h: f64, r: bool) -> (Array2<f64>, Array2<f64>) {
+        let x;
+        let y;
+        if r {
+            x = arr2(&[
+                [x_origin],
+                [x_origin],
+                [x_origin + w]
+            ]);
+            y = arr2(&[
+                [y_origin],
+                [y_origin + h],
+                [y_origin]
+            ]);
+        } else {
+            x = arr2(&[
+                [x_origin],
+                [(x_origin + w) / 2.],
+                [(x_origin + w)]
+            ]);
+            y = arr2(&[
+                [y_origin],
+                [h],
+                [y_origin]
+            ]);
+        }
+
+        (x, y)
     }
 
     #[pyfn(m, "make_triangle")]
-    fn make_triangle_py(_py: Python) -> Py<PyArray2<i32>> {
-        make_triangle().into_pyarray(_py).to_owned()
+    fn make_triangle_py(_py: Python, x_origin: f64, y_origin: f64, w: f64, h: f64, r: bool) -> &PyTuple {
+        let res = make_triangle(x_origin, y_origin, w, h, r);
+        let x = res.0.into_pyarray(_py).to_owned();
+        let y = res.1.into_pyarray(_py).to_owned();
+        PyTuple::new(_py, &[x, y])
     }
 
     fn get_angle(a: ArrayViewD<'_, f64>, b: ArrayViewD<'_, f64>, c: ArrayViewD<'_, f64>) -> PyResult<f64> {
@@ -59,20 +88,6 @@ fn rustic(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         let b = b.as_array();
         find_distance(a, b)
     }
-
-    // fn linspace_to_circle_points(r: f64, mut x: ArrayViewMutD<'_, f64>, mut y: ArrayViewMutD<'_, f64>) {
-    //     for i in 0..x.len() {
-    //         x[i] = r * x[i].cos();
-    //         y[i] = r * y[i].sin();
-    //     }
-    // }
-
-    // fn linspace_to_circle_points_with_offset(r: f64, mut x: ArrayViewMutD<'_, f64>, mut y: ArrayViewMutD<'_, f64>, offset_x: f64, offset_y: f64) {
-    //     for i in 0..x.len() {
-    //         x[i] = r * x[i].cos() + offset_x;
-    //         y[i] = r * y[i].sin() + offset_y;
-    //     }
-    // }
 
     fn circle_points(r: f64) -> (Array1<f64>, Array1<f64>) {
         let mut x = Array::linspace(0., PI*2., 100);

@@ -11,7 +11,7 @@ import rustic
 layout = [
     [sg.Text('Radius:'), sg.Input('1', key='r', size=(3, 1)), sg.Button('Plot', bind_return_key=True), sg.Button('Clear')],
     [
-        sg.Checkbox('Offset the figure?', key='cb', enable_events=True),
+        sg.Checkbox('Set custom origin point (default: (0, 0))?', key='cb', enable_events=True),
         sg.Input('0', size=(3, 1), key='x', disabled=True), 
         sg.Input('0', size=(3, 1), key='y', disabled=True)
     ],
@@ -44,8 +44,7 @@ while True:
     if event == 'Plot':
         r = float(window['r'].Get())
 
-        x_off = float(window['x'].Get()) if checked else 0
-        y_off = float(window['y'].Get()) if checked else 0
+        x_off, y_off = map(lambda i: float(window[i].Get() if checked else 0), elements)
 
         x, y = rustic.circle_points_offset(r, x_off, y_off)
         plt.plot(x, y)
